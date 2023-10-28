@@ -1,0 +1,57 @@
+#include <iostream>
+#include <algorithm>
+using namespace std;
+
+struct Node {
+    int data;
+    Node* leftChild;
+    Node* rightChild;
+};
+
+Node* newNode(int data) {
+    Node* newNode = new Node;
+    newNode->data = data;
+    newNode->leftChild = nullptr;
+    newNode->rightChild = nullptr;
+    return newNode;
+}
+
+int height(Node* root, int& diameter) {
+    if (root == nullptr)
+        return 0;
+
+    int leftHeight = height(root->leftChild, diameter);
+    int rightHeight = height(root->rightChild, diameter);
+
+    // Update the diameter if the current path has a larger diameter
+    diameter = max(diameter, leftHeight + rightHeight + 1);
+
+    // Return the height of the current node
+    return 1 + max(leftHeight, rightHeight);
+}
+
+int getDiameter(Node* root) {
+    if (root == nullptr)
+        return 0;
+
+    int diameter = 0;
+    height(root, diameter);
+
+    return diameter;
+}
+
+int main() {
+    Node* root = newNode(1);
+    root->leftChild = newNode(2);
+    root->rightChild = newNode(3);
+    root->leftChild->leftChild = newNode(4);
+    root->leftChild->rightChild = newNode(5);
+    root->leftChild->leftChild->leftChild = newNode(9);
+    root->leftChild->rightChild->rightChild = newNode(10);
+
+
+    int treeDiameter = getDiameter(root);
+    cout << "Diameter of the binary tree is: " << treeDiameter << endl;
+
+    return 0;
+}
